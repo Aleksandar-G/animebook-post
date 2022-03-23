@@ -4,9 +4,9 @@ const postRouter = require('./routes/post')
 
 //Connect to databse
 const sequelize = new Sequelize('postdb', 'user', 'password', {
-    host: 'localhost',
+    host: 'post-db',
     port: 5432,
-    dialect: 'postgres'/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+    dialect: 'postgres'
 });
 sequelize.authenticate().then(() => {
     console.log("good job");
