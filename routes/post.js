@@ -19,8 +19,6 @@ router.get('/:userId', (req, res) => {
 
 // create a new post
 router.post('/', (req, res) => {
-    console.log(req.body.user_id);
-    console.log(req.body.content);
     const user_id = req.body.user_id
     const content = req.body.content
     Post.build({ user_id, content }).save().then(() => {
