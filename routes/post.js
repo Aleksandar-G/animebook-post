@@ -1,19 +1,13 @@
 const express = require("express")
-const { Post } = require("../models/");
 const router = express.Router()
+const { postPerUser, createPost } = require("../controllers/postController")
 
 // fetch posts per user
 router.get('/:userId', (req, res) => {
 
+    const posts = postPerUser(req.params.userId)
 
-    Post.findAll({
-        where: {
-            user_id: req.params.userId
-        }
-    }).then((posts) => {
-        res.send(posts)
-        console.log(posts);
-    })
+    res.send(posts)
 
 })
 
@@ -21,10 +15,13 @@ router.get('/:userId', (req, res) => {
 router.post('/', (req, res) => {
     const user_id = req.body.user_id
     const content = req.body.content
-    Post.build({ user_id, content }).save().then(() => {
+    const saved = createPost(user_id, content)
+    if (!saved) {
+        res.status(500)
+    } else {
         res.status(201)
         res.send("saved",)
-    })
+    }
 })
 
 module.exports = router
