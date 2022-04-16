@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test":"jest",
+    "test": "jest",
     "a": "jest --init"
   },
   "author": "",
@@ -22,5 +22,8 @@
     "sequelize-cli": "^6.4.1",
     "superagent": "^7.1.2",
     "supertest": "^6.2.2"
+  },
+  "devDependencies": {
+    "prettier": "2.6.2"
   }
 }
