@@ -1,23 +1,16 @@
+require('dotenv').config()
 const express = require('express')
-const { Sequelize } = require('sequelize');
 const postRouter = require('./routes/post')
+const { database } = require('./utils/database')
 
-//Connect to databse
-const sequelize = new Sequelize('postdb', 'user', 'password', {
-    host: 'post-db',
-    port: 5432,
-    dialect: 'postgres'
-});
-sequelize.authenticate().then(() => {
-    console.log("good job");
-}).catch((err) => { console.log(err); })
+const PORT = process.env.SERVER_PORT
 
 //start server
 const app = express()
 
 app.use(express.json())
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log("Listening on port 3000!")
 });
 

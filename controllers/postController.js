@@ -1,18 +1,48 @@
-const { Post } = require("../models/");
+const {postPerUser, createPost} = require('../services/post')
+const rabbitmq = require('../services/rabbitmq')
+const { verifyJWT } = require('../services/verifyJWT')
 
-export const postPerUser = (userId) => {
-    Post.findAll({
-        where: {
-            user_id: userId
-        }
-    }).then((posts) => {
-        return posts
-        //console.log(posts);
+let channel;
+
+rabbitmq.rabbitMQChannel()
+    .then((ch) => {
+        channel = ch
     })
+
+
+const getPostsPerUser = async (userId,rpcMessage) => {
+
+    //const verified = await verifyJWT(channel,rpcMessage)
+    const verified = true
+        if (!verified) {
+            throw new Error("not authenticated")
+        }else{
+            const posts = await postPerUser(userId)
+            console.log(posts);
+            return posts
+        }
+
+
 }
 
-export const createPost = (userId, content) => {
-    Post.create({ userId, content }).then(() => {
-        return true
-    }).catch(() => { return false })
+const savePost = async (userId, content, rpcMessage) => {
+
+    //const verified = await verifyJWT(channel,rpcMessage)
+    const verified = true
+
+    if (!verified) {
+        throw new Error("not authenticated")
+    } else {
+        
+        if (!content) throw new Error("no content")
+        console.log(userId);
+        const created = await createPost(userId,content)
+
+        return created
+       
+    }   
 }
+
+exports.savePost = savePost
+exports.getPostsPerUser = getPostsPerUser
+
