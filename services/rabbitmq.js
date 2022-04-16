@@ -22,6 +22,7 @@ const rabbitMQChannel = async () =>
                 durable: true
             })
 
+            console.log("connected to rabbitmq")
             channel.prefetch(1)
 
             channel.responseEmitter = new EventEmitter();
