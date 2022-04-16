@@ -1,4 +1,4 @@
-const {postPerUser, createPost} = require('../services/post')
+const {postPerUser, createPost} = require('../services/postService')
 const rabbitmq = require('../services/rabbitmq')
 const { verifyJWT } = require('../services/verifyJWT')
 
