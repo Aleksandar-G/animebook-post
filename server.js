@@ -1,18 +1,22 @@
-require('dotenv').config()
-const express = require('express')
-const postRouter = require('./routes/post')
-const { database } = require('./utils/database')
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const postRouter = require("./routes/post");
+const { database } = require("./utils/database");
 
-const PORT = process.env.SERVER_PORT
+const PORT = process.env.SERVER_PORT;
 
 //start server
-const app = express()
+const app = express();
 
-app.use(express.json())
+app.use(express.json());
+
+//enable cors
+app.use(cors());
 
 app.listen(PORT, () => {
-    console.log("Listening on port 3000!")
+  console.log("Listening on port 3000!");
 });
 
 //routers
-app.use('/post', postRouter)
+app.use("/post", postRouter);
