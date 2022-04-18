@@ -10,7 +10,7 @@ const Generatequeue = 'generate_auhtentication_queue'
 
 
 const rabbitMQChannel = async () =>
-    amqp.connect(`amqp://localhost`)
+    amqp.connect(`amqp://${messageBroker}`)
         .then((connection) => connection.createChannel())
         .then((channel) => {
 
