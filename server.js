@@ -15,4 +15,4 @@ app.listen(PORT, () => {
 });
 
 //routers
-app.use('/', postRouter)
+app.use('/post', postRouter)
