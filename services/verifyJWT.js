@@ -1,14 +1,13 @@
-const rabbitmq = require('./rabbitmq')
+const rabbitmq = require("./rabbitmq");
 
+const verifyJWT = (channel, rpcMessage) =>
+  new Promise((resolve) => {
+    rabbitmq
+      .sendRPCRequest(channel, rpcMessage, rabbitmq.verifyQueue)
+      .then((verified) => {
+        const userData = JSON.parse(verified);
+        resolve(userData);
+      });
+  });
 
-const verifyJWT = (channel,rpcMessage) => {
-    rabbitmq.sendRPCRequest(channel, rpcMessage, rabbitmq.verifyQueue).then((verified) => {
-        if (verified) {
-            return true
-        } else {
-            return false
-        }
-    })
-}
-
-exports.modules = verifyJWT
+exports.verifyJWT = verifyJWT;
