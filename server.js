@@ -4,7 +4,7 @@ const cors = require("cors");
 const postRouter = require("./routes/post");
 const { database } = require("./utils/database");
 
-const PORT = process.env.SERVER_PORT;
+const PORT = process.env.SERVER_PORT || 3000;
 
 //start server
 const app = express();
