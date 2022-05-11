@@ -9,7 +9,7 @@ const databasePort = process.env.DATABASE_PORT;
 const database = new Sequelize("postdb", databaseUser, databasePassword, {
   host: databaseUrl,
   port: databasePort,
-  dialect: "mysql",
+  dialect: "postgres",
 });
 database
   .authenticate()
