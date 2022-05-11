@@ -19,6 +19,7 @@ const allPosts = async (offset) => {
   });
   const fetchStop = Date.now() - fetchStart;
   console.log(fetchStop);
+  console.log(`fetch timestamp: ${fetchStop}`);
   return posts;
 };
 
@@ -26,7 +27,7 @@ const createPost = async (userId, content) => {
   const createStart = Date.now();
   const post = await Post.create({ user_id: userId, content: content });
   const createStop = Date.now() - createStart;
-  console.log(createStop);
+  console.log(`create timestamp: ${createStop}`);
 
   return post;
 };
