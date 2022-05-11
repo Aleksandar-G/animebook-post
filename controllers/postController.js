@@ -12,13 +12,14 @@ rabbitmq.rabbitMQChannel().then((ch) => {
   channel = ch;
 });
 
-const getPostsPerUser = async (userId, JWTtoken) => {
-  //const verifiedUser = await verifyJWT(channel,rpcMessage)
-  const verifiedUser = true;
-  if (!verified) {
+const getPostsPerUser = async (username, JWTtoken) => {
+  const rpcMessage = JWTtoken.toString();
+  const verifiedUser = await verifyJWT(channel, rpcMessage);
+  //const verifiedUser = true;
+  if (verifiedUser === "") {
     throw new Error("not authenticated");
   } else {
-    const posts = await postPerUser(userId);
+    const posts = await postPerUser(username);
     //console.log(posts);
     return posts;
   }
@@ -33,7 +34,11 @@ const savePost = async (content, JWTtoken) => {
     throw new Error("not authenticated");
   } else {
     if (!content) throw new Error("no content");
-    const created = await createPost(verifiedUser.userId, content);
+    const created = await createPost(
+      verifiedUser.userId,
+      verifiedUser.username,
+      content
+    );
 
     return created;
   }

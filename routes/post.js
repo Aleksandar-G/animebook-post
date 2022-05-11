@@ -7,15 +7,11 @@ const {
 } = require("../controllers/postController");
 
 // fetch posts per user
-router.get("/:id", (req, res) => {
-  // NOT FINISHED
-  const rpcMessage = {
-    token: req.headers.authorization,
-    username: req.body.username,
-  };
-  const userId = req.body.userId;
+router.get("/:username", (req, res) => {
+  const JWTtoken = req.headers.authorization;
+  const username = req.params.username;
 
-  getPostsPerUser(userId, rpcMessage)
+  getPostsPerUser(username, JWTtoken)
     .then((posts) => {
       res.status(200);
       res.send(posts);

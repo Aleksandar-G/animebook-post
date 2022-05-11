@@ -1,9 +1,9 @@
 const { Post } = require("../models");
 
-const postPerUser = (userId) => {
+const postPerUser = (username) => {
   return Post.findAll({
     where: {
-      user_id: userId,
+      username: username,
     },
   }).then((posts) => {
     return posts;
@@ -23,9 +23,13 @@ const allPosts = async (offset) => {
   return posts;
 };
 
-const createPost = async (userId, content) => {
+const createPost = async (userId, username, content) => {
   const createStart = Date.now();
-  const post = await Post.create({ user_id: userId, content: content });
+  const post = await Post.create({
+    user_id: userId,
+    username: username,
+    content: content,
+  });
   const createStop = Date.now() - createStart;
   console.log(`create timestamp: ${createStop}`);
 
