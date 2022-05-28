@@ -36,6 +36,21 @@ const createPost = async (userId, username, content) => {
   return post;
 };
 
+const getPost = async (postId) => {
+  const post = await Post.findByPk(postId);
+  return post;
+};
+
+const removePost = async (postId) => {
+  const post = await Post.destroy({
+    where: { id: postId },
+  });
+
+  return post;
+};
+
 exports.postPerUser = postPerUser;
 exports.createPost = createPost;
 exports.allPosts = allPosts;
+exports.getPost = getPost;
+exports.removePost = removePost;
