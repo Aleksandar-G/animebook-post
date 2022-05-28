@@ -19,5 +19,10 @@ app.listen(PORT, () => {
 });
 
 //routers
-//app.use("/post", postRouter);
-app.use(postRouter);
+app.use("/post", postRouter);
+//app.use(postRouter);
+
+app.get("/health-check", (req, res) => {
+  res.status(200);
+  res.send("ON GOOGLE CLOUD BABY");
+});
