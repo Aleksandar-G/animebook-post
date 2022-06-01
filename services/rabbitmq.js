@@ -1,18 +1,25 @@
 require("dotenv").config();
 const amqp = require("amqplib");
 const EventEmitter = require("events");
+const crypto = require("crypto");
 
 const messageBroker = process.env.MESSAGE_BROKER;
 
 // queues to connect to
 const Verifyqueue = "verify_auhtentication_queue";
 const Generatequeue = "generate_auhtentication_queue";
+let ReplyQueue = "reply-to-";
 
-const rabbitMQChannel = async () =>
+const rabbitMQChannel = () =>
   amqp
-    .connect(`amqp://${messageBroker}`)
+    .connect(`${messageBroker}`)
     .then((connection) => connection.createChannel())
     .then((channel) => {
+      channel.responseEmitter = new EventEmitter();
+      channel.responseEmitter.setMaxListeners(0);
+
+      generateReplyQueue();
+
       channel.assertQueue(Verifyqueue, {
         durable: true,
       });
@@ -21,10 +28,24 @@ const rabbitMQChannel = async () =>
         durable: true,
       });
 
-      console.log("connected to rabbitmq");
-      channel.prefetch(1);
+      //ReplyQueue += "-test";
+      channel.assertQueue(ReplyQueue, { exclusive: true }).then(() => {
+        channel.consume(
+          ReplyQueue,
+          (msg) => {
+            channel.responseEmitter.emit(
+              msg.properties.correlationId,
+              msg.content.toString()
+            );
+          },
 
-      channel.responseEmitter = new EventEmitter();
+          { noAck: true }
+        );
+      });
+
+      console.log(ReplyQueue);
+
+      console.log("connected to rabbitmq");
 
       return channel;
     });
@@ -34,32 +55,19 @@ const sendRPCRequest = (channel, message, rpcQueue) =>
     // unique random string
     const correlationId = generateUuid();
 
-    channel.assertQueue("", { exclusive: true, noAck: true }).then((queue) => {
-      channel.consume(
-        queue.queue,
-        (msg) =>
-          channel.responseEmitter.emit(
-            msg.properties.correlationId,
-            msg.content.toString()
-          ),
-        { noAck: true }
-      );
-
-      channel.responseEmitter.once(correlationId, resolve);
-
-      channel.sendToQueue(rpcQueue, Buffer.from(message), {
-        correlationId: correlationId,
-        replyTo: queue.queue,
-      });
+    channel.responseEmitter.once(correlationId, resolve);
+    channel.sendToQueue(rpcQueue, Buffer.from(message), {
+      correlationId,
+      replyTo: ReplyQueue,
     });
   });
 
+const generateReplyQueue = () => {
+  ReplyQueue += crypto.randomUUID();
+};
+
 const generateUuid = () => {
-  return (
-    Math.random().toString() +
-    Math.random().toString() +
-    Math.random().toString()
-  );
+  return crypto.randomUUID().toString() + crypto.randomUUID().toString();
 };
 
 module.exports.rabbitMQChannel = rabbitMQChannel;
