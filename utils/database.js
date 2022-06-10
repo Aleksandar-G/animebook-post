@@ -1,10 +1,13 @@
 const { Sequelize } = require("sequelize");
 
 const databaseUrl = process.env.DATABASE_URL;
-const databaseUser = process.env.DATABASE_USER;
-const databasePassword = process.env.DATABASE_PASSWORD;
-const databasePort = process.env.DATABASE_PORT;
+const databaseUser = process.env.DATABASE_USER || "user";
+const databasePassword = process.env.DATABASE_PASSWORD || "password";
+const databasePort = process.env.DATABASE_PORT || "5432";
 
+console.log(databaseUser);
+console.log(databasePassword);
+console.log(databasePort);
 //Connect to databse
 const database = new Sequelize("postdb", databaseUser, databasePassword, {
   host: databaseUrl,
