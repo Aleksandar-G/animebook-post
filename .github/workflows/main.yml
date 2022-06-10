@@ -95,7 +95,7 @@ jobs:
       uses: docker/build-push-action@v3.0.0
       with:
           push: true
-          tags: ${{ secrets.DOCKER_USER }}/animebook-user:ci
+          tags: ${{ secrets.DOCKER_USER }}/animebook-post:ci
 
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
